@@ -1,4 +1,4 @@
-from src.subdivision import generate_art
+from rectangles import generate_art
 from src.draw import draw, get_colors_from_heatmap
 
 
