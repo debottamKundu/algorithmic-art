@@ -1,5 +1,5 @@
-from rectangles import generate_art
-from src.draw import draw, get_colors_from_heatmap
+from algorithmic_art.rectangles import generate_art
+from algorithmic_art.draw import draw, get_colors_from_heatmap
 
 
 def main():
