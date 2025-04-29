@@ -2,6 +2,8 @@ import matplotlib.pyplot as plt
 import matplotlib.patches as patches
 import matplotlib.colors as mcolors
 import seaborn as sns
+import wesanderson
+import numpy as np
 
 
 def get_colors_from_heatmap(cmap_name="viridis", n_colors=5):
@@ -23,6 +25,40 @@ def get_colors_from_heatmap(cmap_name="viridis", n_colors=5):
     hex_colors = [mcolors.to_hex(rgba) for rgba in rgba_colors]
 
     return hex_colors
+
+
+def get_wes_anderson_colors(movie_name="Darjeeling", noise_param=0.1, n_colors=5):
+    # get palatte
+    # check if len <= n_colors, return
+    # otherwise convert to rgb, add noise
+    # convert to hex and return
+
+    colors = wesanderson.film_palette(movie_name)
+    if len(colors) == n_colors:
+        return colors
+    else:
+        total_colors = len(colors)
+        rgb_colors = np.asarray([mcolors.to_rgb(color) for color in colors])
+
+        # tile
+        rgb_colors_reps = np.tile(rgb_colors, (n_colors // total_colors + 1, 1))[
+            :n_colors
+        ]
+
+        noise = np.random.normal(0, noise_param, size=(n_colors,))
+        choose_columns = np.random.randint(0, 3, n_colors)
+
+        # add noise
+        for i in range(n_colors):
+            candidate_color = rgb_colors_reps[i, choose_columns[i]] + noise[i]
+            if candidate_color < 0 or candidate_color > 1:
+                noise[i] = -noise[i]
+            rgb_colors_reps[i, choose_columns[i]] += noise[i]
+
+        # convert to hex
+        hex_colors = [mcolors.to_hex(rgb) for rgb in rgb_colors_reps]
+
+        return hex_colors
 
 
 def draw(df):
@@ -68,3 +104,8 @@ def draw(df):
 
 # nextup: mosaic
 # get each rectangle, divide into 1 pixel cubes, then convert hex into rgb, add noise, and then plot
+
+
+def draw_mosaic(df):
+
+    df["RGB"] = df["Color"].apply(lambda x: mcolors.to_rgb(x))

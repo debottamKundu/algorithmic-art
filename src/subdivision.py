@@ -77,3 +77,4 @@ def generate_art(canvas_width, canvas_height, iterations):
         else:
             df = split_vertically(df, row_index)
     return df
+
